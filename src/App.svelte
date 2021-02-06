@@ -1,30 +1,61 @@
 <script>
-	export let name;
+  import Card from "./components/Card.svelte";
+  import Header from "./components/Header.svelte";
+  import currentWeatherDataByGeographicCoordinates from "./service/currentWeatherDataByGeographicCoordinates";
+  import { currentWeather } from "./store/currentWeatherStore";
+
+  const currentPositionOptions = {
+    enableHighAccuracy: false,
+    maximumAge: 30000,
+    timeout: 3000,
+  };
+  let weatherCurrent = {
+        id: 0,
+        temp: '-',
+        humidity: '',
+        windSpeed: ''
+    };
+
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(
+      successGeolocation,
+      errorGeolocation,
+      currentPositionOptions
+    );
+  } else {
+  }
+  
+
+  async function successGeolocation(position) {
+    console.log("localizacon", position);
+    let weatherData = await currentWeatherDataByGeographicCoordinates(
+      position.coords.latitude,
+      position.coords.longitude
+    );
+	if(weatherData != null){
+    console.log(weatherData);
+
+		weatherCurrent.temp = weatherData.current.temp_c;
+    weatherCurrent.humidity = weatherData.current.humidity;
+    weatherCurrent.text = weatherData.current.condition.text;
+    weatherCurrent.location = {};
+    weatherCurrent.location.name = weatherData.location.name
+	}
+    currentWeather.setCurrentWeather(weatherCurrent);
+  }
+
+  async function errorGeolocation() {}
 </script>
 
 <main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+  <div class="container">
+  
+    <Header />
+    {#if $currentWeather !== null}
+    <Card />
+    {/if}
+  </div>
 </main>
 
 <style>
-	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
-
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
-	}
 </style>
