@@ -1,21 +1,19 @@
 <script>
-  import { compute_slots, space } from "svelte/internal";
-
   import { currentWeather } from "../store/currentWeatherStore";
-  import { onMount, afterUpdate } from "svelte";
+
 
   let bgColor = null;
   $: console.log("store", $currentWeather);
 
-  $: if ($currentWeather.temp !== "") {
-    $currentWeather.temp > 35 ? (bgColor = "flare") : null;
-    $currentWeather.temp > 25 && $currentWeather.temp < 36
+  $: if ($currentWeather.current.temp_c !== "") {
+    $currentWeather.current.temp_c > 35 ? (bgColor = "flare") : null;
+    $currentWeather.current.temp_c > 25 && $currentWeather.current.temp_c < 36
       ? (bgColor = "background-card-blue")
       : null;
-    $currentWeather.temp > 10 && $currentWeather.temp < 26
+      $currentWeather.current.temp_c > 10 && $currentWeather.current.temp_c < 26
       ? (bgColor = "background-card-blue")
       : null;
-    $currentWeather.temp < 11 ? (bgColor = "cool-sky") : null;
+      $currentWeather.current.temp_c < 11 ? (bgColor = "cool-sky") : null;
   }
 </script>
 
@@ -27,8 +25,8 @@
     <div class="container">
       <div class="item">
         <div>
-          <h2 class="title-temp">{$currentWeather.temp} °</h2>
-          <h4 class="title-day">{$currentWeather.text}</h4> 
+          <h2 class="title-temp">{$currentWeather.current.temp_c} °</h2>
+          <h4 class="title-day">{$currentWeather.current.condition.text}</h4> 
         </div>
      
       </div>
@@ -37,9 +35,9 @@
       </div>
     </div>
       <div class="info">
-         <span>Humedad</span>
-         <span>Viento</span>
-         <span>Indice UV</span>
+         <span>Humedad { $currentWeather.current.humidity} %</span>
+         <span>Viento  { $currentWeather.current.wind_kph} km/h</span>
+         <span>Indice UV {$currentWeather.current.uv}</span>
       </div>
     </div>
   {/if}
@@ -81,6 +79,7 @@
      width: 50%;
      margin: 10spx;
      padding: 5px;
+     margin:-5px;
    }
    .title-day{
      text-align: center;

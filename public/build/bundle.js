@@ -1,5 +1,5 @@
 
-(function(l, r) { if (l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (window.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(window.document);
+(function(l, r) { if (l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (window.location.host || 'localhost').split(':')[0] + ':35730/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(window.document);
 var app = (function () {
     'use strict';
 
@@ -42,13 +42,6 @@ var app = (function () {
     function component_subscribe(component, store, callback) {
         component.$$.on_destroy.push(subscribe(store, callback));
     }
-    function compute_slots(slots) {
-        const result = {};
-        for (const key in slots) {
-            result[key] = true;
-        }
-        return result;
-    }
 
     function append(target, node) {
         target.appendChild(node);
@@ -59,6 +52,12 @@ var app = (function () {
     function detach(node) {
         node.parentNode.removeChild(node);
     }
+    function destroy_each(iterations, detaching) {
+        for (let i = 0; i < iterations.length; i += 1) {
+            if (iterations[i])
+                iterations[i].d(detaching);
+        }
+    }
     function element(name) {
         return document.createElement(name);
     }
@@ -67,6 +66,10 @@ var app = (function () {
     }
     function space() {
         return text(' ');
+    }
+    function listen(node, event, handler, options) {
+        node.addEventListener(event, handler, options);
+        return () => node.removeEventListener(event, handler, options);
     }
     function attr(node, attribute, value) {
         if (value == null)
@@ -77,6 +80,9 @@ var app = (function () {
     function children(element) {
         return Array.from(element.childNodes);
     }
+    function set_input_value(input, value) {
+        input.value = value == null ? '' : value;
+    }
     function custom_event(type, detail) {
         const e = document.createEvent('CustomEvent');
         e.initCustomEvent(type, false, false, detail);
@@ -86,17 +92,6 @@ var app = (function () {
     let current_component;
     function set_current_component(component) {
         current_component = component;
-    }
-    function get_current_component() {
-        if (!current_component)
-            throw new Error('Function called outside component initialization');
-        return current_component;
-    }
-    function onMount(fn) {
-        get_current_component().$$.on_mount.push(fn);
-    }
-    function afterUpdate(fn) {
-        get_current_component().$$.after_update.push(fn);
     }
 
     const dirty_components = [];
@@ -344,6 +339,19 @@ var app = (function () {
         dispatch_dev('SvelteDOMRemove', { node });
         detach(node);
     }
+    function listen_dev(node, event, handler, options, has_prevent_default, has_stop_propagation) {
+        const modifiers = options === true ? ['capture'] : options ? Array.from(Object.keys(options)) : [];
+        if (has_prevent_default)
+            modifiers.push('preventDefault');
+        if (has_stop_propagation)
+            modifiers.push('stopPropagation');
+        dispatch_dev('SvelteDOMAddEventListener', { node, event, handler, modifiers });
+        const dispose = listen(node, event, handler, options);
+        return () => {
+            dispatch_dev('SvelteDOMRemoveEventListener', { node, event, handler, modifiers });
+            dispose();
+        };
+    }
     function attr_dev(node, attribute, value) {
         attr(node, attribute, value);
         if (value == null)
@@ -351,12 +359,25 @@ var app = (function () {
         else
             dispatch_dev('SvelteDOMSetAttribute', { node, attribute, value });
     }
+    function prop_dev(node, property, value) {
+        node[property] = value;
+        dispatch_dev('SvelteDOMSetProperty', { node, property, value });
+    }
     function set_data_dev(text, data) {
         data = '' + data;
         if (text.wholeText === data)
             return;
         dispatch_dev('SvelteDOMSetData', { node: text, data });
         text.data = data;
+    }
+    function validate_each_argument(arg) {
+        if (typeof arg !== 'string' && !(arg && typeof arg === 'object' && 'length' in arg)) {
+            let msg = '{#each} only iterates over array-like objects.';
+            if (typeof Symbol === 'function' && arg && Symbol.iterator in arg) {
+                msg += ' You can use a spread to convert this iterable into an array.';
+            }
+            throw new Error(msg);
+        }
     }
     function validate_slots(name, slot, keys) {
         for (const slot_key of Object.keys(slot)) {
@@ -438,17 +459,7 @@ var app = (function () {
     }
 
     function CurrentWeatherStore(){
-        const {subscribe, update ,set } = writable({
-            location:{
-                country: '',
-                name: '',
-                region:'',
-            },
-            temp: '',
-            text:'',
-            humidity: '',
-            windSpeed: ''
-        });
+        const {subscribe, update ,set } = writable(null);
 
         return {
             subscribe,
@@ -464,7 +475,7 @@ var app = (function () {
     const { console: console_1 } = globals;
     const file = "src/components/Card.svelte";
 
-    // (23:2) {#if $currentWeather !== ""}
+    // (21:2) {#if $currentWeather !== ""}
     function create_if_block(ctx) {
     	let div5;
     	let h1;
@@ -475,12 +486,12 @@ var app = (function () {
     	let div1;
     	let div0;
     	let h2;
-    	let t2_value = /*$currentWeather*/ ctx[0].temp + "";
+    	let t2_value = /*$currentWeather*/ ctx[0].current.temp_c + "";
     	let t2;
     	let t3;
     	let t4;
     	let h4;
-    	let t5_value = /*$currentWeather*/ ctx[0].text + "";
+    	let t5_value = /*$currentWeather*/ ctx[0].current.condition.text + "";
     	let t5;
     	let t6;
     	let div2;
@@ -489,10 +500,21 @@ var app = (function () {
     	let t7;
     	let div4;
     	let span0;
+    	let t8;
+    	let t9_value = /*$currentWeather*/ ctx[0].current.humidity + "";
     	let t9;
-    	let span1;
+    	let t10;
     	let t11;
+    	let span1;
+    	let t12;
+    	let t13_value = /*$currentWeather*/ ctx[0].current.wind_kph + "";
+    	let t13;
+    	let t14;
+    	let t15;
     	let span2;
+    	let t16;
+    	let t17_value = /*$currentWeather*/ ctx[0].current.uv + "";
+    	let t17;
     	let div5_class_value;
 
     	const block = {
@@ -516,36 +538,41 @@ var app = (function () {
     			t7 = space();
     			div4 = element("div");
     			span0 = element("span");
-    			span0.textContent = "Humedad";
-    			t9 = space();
-    			span1 = element("span");
-    			span1.textContent = "Viento";
+    			t8 = text("Humedad ");
+    			t9 = text(t9_value);
+    			t10 = text(" %");
     			t11 = space();
+    			span1 = element("span");
+    			t12 = text("Viento  ");
+    			t13 = text(t13_value);
+    			t14 = text(" km/h");
+    			t15 = space();
     			span2 = element("span");
-    			span2.textContent = "Indice UV";
-    			attr_dev(h1, "class", "title svelte-19pil8q");
-    			add_location(h1, file, 25, 4, 828);
-    			attr_dev(h2, "class", "title-temp svelte-19pil8q");
-    			add_location(h2, file, 29, 10, 961);
-    			attr_dev(h4, "class", "title-day svelte-19pil8q");
-    			add_location(h4, file, 30, 10, 1024);
-    			add_location(div0, file, 28, 8, 945);
-    			attr_dev(div1, "class", "item svelte-19pil8q");
-    			add_location(div1, file, 27, 6, 918);
-    			attr_dev(img, "class", "icons svelte-19pil8q");
+    			t16 = text("Indice UV ");
+    			t17 = text(t17_value);
+    			attr_dev(h1, "class", "title svelte-arzzqz");
+    			add_location(h1, file, 23, 4, 795);
+    			attr_dev(h2, "class", "title-temp svelte-arzzqz");
+    			add_location(h2, file, 27, 10, 928);
+    			attr_dev(h4, "class", "title-day svelte-arzzqz");
+    			add_location(h4, file, 28, 10, 1001);
+    			add_location(div0, file, 26, 8, 912);
+    			attr_dev(div1, "class", "item svelte-arzzqz");
+    			add_location(div1, file, 25, 6, 885);
+    			attr_dev(img, "class", "icons svelte-arzzqz");
     			if (img.src !== (img_src_value = "./icons/day.svg")) attr_dev(img, "src", img_src_value);
-    			add_location(img, file, 35, 8, 1142);
-    			attr_dev(div2, "class", "item svelte-19pil8q");
-    			add_location(div2, file, 34, 6, 1115);
-    			attr_dev(div3, "class", "container svelte-19pil8q");
-    			add_location(div3, file, 26, 4, 888);
-    			add_location(span0, file, 39, 9, 1244);
-    			add_location(span1, file, 40, 9, 1274);
-    			add_location(span2, file, 41, 9, 1303);
-    			attr_dev(div4, "class", "info svelte-19pil8q");
-    			add_location(div4, file, 38, 6, 1216);
-    			attr_dev(div5, "class", div5_class_value = "card text-white shadow p-3 mb-5  rounded " + /*bgColor*/ ctx[1] + " mb-3 col-md-6  col-sm-8  offset-md-3 card-container" + " svelte-19pil8q");
-    			add_location(div5, file, 23, 4, 702);
+    			add_location(img, file, 33, 8, 1137);
+    			attr_dev(div2, "class", "item svelte-arzzqz");
+    			add_location(div2, file, 32, 6, 1110);
+    			attr_dev(div3, "class", "container svelte-arzzqz");
+    			add_location(div3, file, 24, 4, 855);
+    			add_location(span0, file, 37, 9, 1239);
+    			add_location(span1, file, 38, 9, 1307);
+    			add_location(span2, file, 39, 9, 1378);
+    			attr_dev(div4, "class", "info svelte-arzzqz");
+    			add_location(div4, file, 36, 6, 1211);
+    			attr_dev(div5, "class", div5_class_value = "card text-white shadow p-3 mb-5  rounded " + /*bgColor*/ ctx[1] + " mb-3 col-md-6  col-sm-8  offset-md-3 card-container" + " svelte-arzzqz");
+    			add_location(div5, file, 21, 4, 669);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div5, anchor);
@@ -567,17 +594,28 @@ var app = (function () {
     			append_dev(div5, t7);
     			append_dev(div5, div4);
     			append_dev(div4, span0);
-    			append_dev(div4, t9);
-    			append_dev(div4, span1);
+    			append_dev(span0, t8);
+    			append_dev(span0, t9);
+    			append_dev(span0, t10);
     			append_dev(div4, t11);
+    			append_dev(div4, span1);
+    			append_dev(span1, t12);
+    			append_dev(span1, t13);
+    			append_dev(span1, t14);
+    			append_dev(div4, t15);
     			append_dev(div4, span2);
+    			append_dev(span2, t16);
+    			append_dev(span2, t17);
     		},
     		p: function update(ctx, dirty) {
     			if (dirty & /*$currentWeather*/ 1 && t0_value !== (t0_value = /*$currentWeather*/ ctx[0].location.name + "")) set_data_dev(t0, t0_value);
-    			if (dirty & /*$currentWeather*/ 1 && t2_value !== (t2_value = /*$currentWeather*/ ctx[0].temp + "")) set_data_dev(t2, t2_value);
-    			if (dirty & /*$currentWeather*/ 1 && t5_value !== (t5_value = /*$currentWeather*/ ctx[0].text + "")) set_data_dev(t5, t5_value);
+    			if (dirty & /*$currentWeather*/ 1 && t2_value !== (t2_value = /*$currentWeather*/ ctx[0].current.temp_c + "")) set_data_dev(t2, t2_value);
+    			if (dirty & /*$currentWeather*/ 1 && t5_value !== (t5_value = /*$currentWeather*/ ctx[0].current.condition.text + "")) set_data_dev(t5, t5_value);
+    			if (dirty & /*$currentWeather*/ 1 && t9_value !== (t9_value = /*$currentWeather*/ ctx[0].current.humidity + "")) set_data_dev(t9, t9_value);
+    			if (dirty & /*$currentWeather*/ 1 && t13_value !== (t13_value = /*$currentWeather*/ ctx[0].current.wind_kph + "")) set_data_dev(t13, t13_value);
+    			if (dirty & /*$currentWeather*/ 1 && t17_value !== (t17_value = /*$currentWeather*/ ctx[0].current.uv + "")) set_data_dev(t17, t17_value);
 
-    			if (dirty & /*bgColor*/ 2 && div5_class_value !== (div5_class_value = "card text-white shadow p-3 mb-5  rounded " + /*bgColor*/ ctx[1] + " mb-3 col-md-6  col-sm-8  offset-md-3 card-container" + " svelte-19pil8q")) {
+    			if (dirty & /*bgColor*/ 2 && div5_class_value !== (div5_class_value = "card text-white shadow p-3 mb-5  rounded " + /*bgColor*/ ctx[1] + " mb-3 col-md-6  col-sm-8  offset-md-3 card-container" + " svelte-arzzqz")) {
     				attr_dev(div5, "class", div5_class_value);
     			}
     		},
@@ -590,7 +628,7 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(23:2) {#if $currentWeather !== \\\"\\\"}",
+    		source: "(21:2) {#if $currentWeather !== \\\"\\\"}",
     		ctx
     	});
 
@@ -605,7 +643,7 @@ var app = (function () {
     		c: function create() {
     			main = element("main");
     			if (if_block) if_block.c();
-    			add_location(main, file, 21, 0, 660);
+    			add_location(main, file, 19, 0, 627);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -660,15 +698,7 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1.warn(`<Card> was created with unknown prop '${key}'`);
     	});
 
-    	$$self.$capture_state = () => ({
-    		compute_slots,
-    		space,
-    		currentWeather,
-    		onMount,
-    		afterUpdate,
-    		bgColor,
-    		$currentWeather
-    	});
+    	$$self.$capture_state = () => ({ currentWeather, bgColor, $currentWeather });
 
     	$$self.$inject_state = $$props => {
     		if ("bgColor" in $$props) $$invalidate(1, bgColor = $$props.bgColor);
@@ -684,20 +714,20 @@ var app = (function () {
     		}
 
     		if ($$self.$$.dirty & /*$currentWeather*/ 1) {
-    			 if ($currentWeather.temp !== "") {
-    				$currentWeather.temp > 35
+    			 if ($currentWeather.current.temp_c !== "") {
+    				$currentWeather.current.temp_c > 35
     				? $$invalidate(1, bgColor = "flare")
     				: null;
 
-    				$currentWeather.temp > 25 && $currentWeather.temp < 36
+    				$currentWeather.current.temp_c > 25 && $currentWeather.current.temp_c < 36
     				? $$invalidate(1, bgColor = "background-card-blue")
     				: null;
 
-    				$currentWeather.temp > 10 && $currentWeather.temp < 26
+    				$currentWeather.current.temp_c > 10 && $currentWeather.current.temp_c < 26
     				? $$invalidate(1, bgColor = "background-card-blue")
     				: null;
 
-    				$currentWeather.temp < 11
+    				$currentWeather.current.temp_c < 11
     				? $$invalidate(1, bgColor = "cool-sky")
     				: null;
     			}
@@ -717,116 +747,6 @@ var app = (function () {
     			tagName: "Card",
     			options,
     			id: create_fragment.name
-    		});
-    	}
-    }
-
-    /* src/components/Header.svelte generated by Svelte v3.32.1 */
-
-    const file$1 = "src/components/Header.svelte";
-
-    function create_fragment$1(ctx) {
-    	let main;
-    	let input;
-    	let t;
-    	let datalist;
-    	let option0;
-    	let option1;
-    	let option2;
-    	let option3;
-    	let option4;
-
-    	const block = {
-    		c: function create() {
-    			main = element("main");
-    			input = element("input");
-    			t = space();
-    			datalist = element("datalist");
-    			option0 = element("option");
-    			option1 = element("option");
-    			option2 = element("option");
-    			option3 = element("option");
-    			option4 = element("option");
-    			attr_dev(input, "class", "form-control");
-    			attr_dev(input, "list", "datalistOptions");
-    			attr_dev(input, "id", "exampleDataList");
-    			attr_dev(input, "placeholder", "Type to search...");
-    			add_location(input, file$1, 5, 0, 41);
-    			option0.__value = "San Francisco";
-    			option0.value = option0.__value;
-    			add_location(option0, file$1, 7, 2, 180);
-    			option1.__value = "New York";
-    			option1.value = option1.__value;
-    			add_location(option1, file$1, 8, 2, 213);
-    			option2.__value = "Seattle";
-    			option2.value = option2.__value;
-    			add_location(option2, file$1, 9, 2, 241);
-    			option3.__value = "Los Angeles";
-    			option3.value = option3.__value;
-    			add_location(option3, file$1, 10, 2, 268);
-    			option4.__value = "Chicago";
-    			option4.value = option4.__value;
-    			add_location(option4, file$1, 11, 2, 299);
-    			attr_dev(datalist, "id", "datalistOptions");
-    			add_location(datalist, file$1, 6, 0, 146);
-    			attr_dev(main, "class", "mt-2");
-    			add_location(main, file$1, 4, 0, 21);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, main, anchor);
-    			append_dev(main, input);
-    			append_dev(main, t);
-    			append_dev(main, datalist);
-    			append_dev(datalist, option0);
-    			append_dev(datalist, option1);
-    			append_dev(datalist, option2);
-    			append_dev(datalist, option3);
-    			append_dev(datalist, option4);
-    		},
-    		p: noop,
-    		i: noop,
-    		o: noop,
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(main);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$1.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$1($$self, $$props) {
-    	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("Header", slots, []);
-    	const writable_props = [];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Header> was created with unknown prop '${key}'`);
-    	});
-
-    	return [];
-    }
-
-    class Header extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, {});
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "Header",
-    			options,
-    			id: create_fragment$1.name
     		});
     	}
     }
@@ -2292,13 +2212,52 @@ var app = (function () {
 
 
     // Make a request for a user with a given ID
+    async function currentWeatherSearchAutocomplete(
+    query
+    ) {
+      return await axios$1
+        .get(
+          `http://api.weatherapi.com/v1/search.json?key=${API_KEY}&q=${query}`
+        )
+        .then(function (response) { 
+          return response.data;
+        })
+        .catch(function (error) {
+        })  
+    }
+
+    const citys = writable([]);
+
+    const setCitys = (arg)  =>{
+            citys.set(arg);
+     return citys;
+    };
+
+
+    // function citysStore(){
+    //     const {subscribe, update ,set } = writable([]);
+
+    //     return{
+    //         subscribe,
+    //         updateCitysStore:(arg) => update(),
+    //         setCitysStore:()=> set([]),
+    //     }
+
+    // }
+
+    // export const citys = citysStore();
+
+    const API_KEY$1 = "6319d22daefc4569b67122547210502";
+
+
+    // Make a request for a user with a given ID
     async function currentWeatherDataByGeographicCoordinates(
       lat,
       long
     ) {
       return await axios$1
         .get(
-          `http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${lat},${long}&lang=es`
+          `http://api.weatherapi.com/v1/current.json?key=${API_KEY$1}&q=${lat},${long}&lang=es`
         )
         .then(function (response) { 
           return response.data;
@@ -2308,12 +2267,255 @@ var app = (function () {
         })  
     }
 
-    /* src/App.svelte generated by Svelte v3.32.1 */
+    /* src/components/AutoComplete.svelte generated by Svelte v3.32.1 */
 
     const { console: console_1$1 } = globals;
+    const file$1 = "src/components/AutoComplete.svelte";
+
+    function get_each_context(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[6] = list[i];
+    	return child_ctx;
+    }
+
+    // (40:4) {#each $citys as item}
+    function create_each_block(ctx) {
+    	let option;
+    	let t_value = /*item*/ ctx[6].name + "";
+    	let t;
+    	let option_value_value;
+
+    	const block = {
+    		c: function create() {
+    			option = element("option");
+    			t = text(t_value);
+    			option.__value = option_value_value = /*item*/ ctx[6].name;
+    			option.value = option.__value;
+    			add_location(option, file$1, 40, 6, 1348);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, option, anchor);
+    			append_dev(option, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*$citys*/ 2 && t_value !== (t_value = /*item*/ ctx[6].name + "")) set_data_dev(t, t_value);
+
+    			if (dirty & /*$citys*/ 2 && option_value_value !== (option_value_value = /*item*/ ctx[6].name)) {
+    				prop_dev(option, "__value", option_value_value);
+    				option.value = option.__value;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(option);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block.name,
+    		type: "each",
+    		source: "(40:4) {#each $citys as item}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$1(ctx) {
+    	let main;
+    	let input;
+    	let t;
+    	let datalist;
+    	let mounted;
+    	let dispose;
+    	let each_value = /*$citys*/ ctx[1];
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			main = element("main");
+    			input = element("input");
+    			t = space();
+    			datalist = element("datalist");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			attr_dev(input, "class", "form-control");
+    			attr_dev(input, "list", "datalistOptions");
+    			attr_dev(input, "id", "exampleDataList");
+    			attr_dev(input, "placeholder", "Ingrese una ciudad");
+    			add_location(input, file$1, 29, 2, 1077);
+    			attr_dev(datalist, "id", "datalistOptions");
+    			add_location(datalist, file$1, 38, 2, 1283);
+    			attr_dev(main, "class", "mt-2");
+    			add_location(main, file$1, 28, 0, 1055);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, main, anchor);
+    			append_dev(main, input);
+    			set_input_value(input, /*ciudad*/ ctx[0]);
+    			append_dev(main, t);
+    			append_dev(main, datalist);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(datalist, null);
+    			}
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(input, "input", /*input_input_handler*/ ctx[4]),
+    					listen_dev(input, "keypress", /*search*/ ctx[2], false, false, false),
+    					listen_dev(input, "input", /*handleInput*/ ctx[3], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*ciudad*/ 1 && input.value !== /*ciudad*/ ctx[0]) {
+    				set_input_value(input, /*ciudad*/ ctx[0]);
+    			}
+
+    			if (dirty & /*$citys*/ 2) {
+    				each_value = /*$citys*/ ctx[1];
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(datalist, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(main);
+    			destroy_each(each_blocks, detaching);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$1.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$1($$self, $$props, $$invalidate) {
+    	let $citys;
+    	validate_store(citys, "citys");
+    	component_subscribe($$self, citys, $$value => $$invalidate(1, $citys = $$value));
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("AutoComplete", slots, []);
+    	let ciudad = "";
+    	let selectedItem;
+
+    	const search = async () => {
+    		const result = await currentWeatherSearchAutocomplete(ciudad);
+
+    		//  citys.setCitys();
+    		if (result !== undefined && result.length !== 0) {
+    			setCitys(result);
+    		} // console.log("result", $citys);
+    	};
+
+    	const handleInput = async event => {
+    		selectedItem = $citys.find(item => event.target.value === item.name);
+    		console.log(selectedItem);
+
+    		if (selectedItem !== undefined) {
+    			const weatherData = await currentWeatherDataByGeographicCoordinates(selectedItem.lat, selectedItem.lon);
+    			currentWeather.setCurrentWeather(weatherData);
+    			console.log("selected", weatherData);
+    		}
+    	};
+
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$1.warn(`<AutoComplete> was created with unknown prop '${key}'`);
+    	});
+
+    	function input_input_handler() {
+    		ciudad = this.value;
+    		$$invalidate(0, ciudad);
+    	}
+
+    	$$self.$capture_state = () => ({
+    		currentWeatherSearchAutocomplete,
+    		citys,
+    		setCitys,
+    		currentWeatherDataByGeographicCoordinates,
+    		currentWeather,
+    		ciudad,
+    		selectedItem,
+    		search,
+    		handleInput,
+    		$citys
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("ciudad" in $$props) $$invalidate(0, ciudad = $$props.ciudad);
+    		if ("selectedItem" in $$props) selectedItem = $$props.selectedItem;
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [ciudad, $citys, search, handleInput, input_input_handler];
+    }
+
+    class AutoComplete extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "AutoComplete",
+    			options,
+    			id: create_fragment$1.name
+    		});
+    	}
+    }
+
+    /* src/App.svelte generated by Svelte v3.32.1 */
+
+    const { console: console_1$2 } = globals;
     const file$2 = "src/App.svelte";
 
-    // (54:4) {#if $currentWeather !== null}
+    // (48:4) {#if $currentWeather !== null}
     function create_if_block$1(ctx) {
     	let card;
     	let current;
@@ -2345,7 +2547,7 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(54:4) {#if $currentWeather !== null}",
+    		source: "(48:4) {#if $currentWeather !== null}",
     		ctx
     	});
 
@@ -2355,22 +2557,22 @@ var app = (function () {
     function create_fragment$2(ctx) {
     	let main;
     	let div;
-    	let header;
+    	let autocomplete;
     	let t;
     	let current;
-    	header = new Header({ $$inline: true });
+    	autocomplete = new AutoComplete({ $$inline: true });
     	let if_block = /*$currentWeather*/ ctx[0] !== null && create_if_block$1(ctx);
 
     	const block = {
     		c: function create() {
     			main = element("main");
     			div = element("div");
-    			create_component(header.$$.fragment);
+    			create_component(autocomplete.$$.fragment);
     			t = space();
     			if (if_block) if_block.c();
     			attr_dev(div, "class", "container");
-    			add_location(div, file$2, 50, 2, 1373);
-    			add_location(main, file$2, 49, 0, 1364);
+    			add_location(div, file$2, 45, 2, 1066);
+    			add_location(main, file$2, 44, 0, 1057);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2378,7 +2580,7 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			insert_dev(target, main, anchor);
     			append_dev(main, div);
-    			mount_component(header, div, null);
+    			mount_component(autocomplete, div, null);
     			append_dev(div, t);
     			if (if_block) if_block.m(div, null);
     			current = true;
@@ -2407,18 +2609,18 @@ var app = (function () {
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(header.$$.fragment, local);
+    			transition_in(autocomplete.$$.fragment, local);
     			transition_in(if_block);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(header.$$.fragment, local);
+    			transition_out(autocomplete.$$.fragment, local);
     			transition_out(if_block);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(main);
-    			destroy_component(header);
+    			destroy_component(autocomplete);
     			if (if_block) if_block.d();
     		}
     	};
@@ -2463,30 +2665,23 @@ var app = (function () {
     	}
 
     	async function successGeolocation(position) {
-    		console.log("localizacon", position);
     		let weatherData = await currentWeatherDataByGeographicCoordinates(position.coords.latitude, position.coords.longitude);
 
     		if (weatherData != null) {
     			console.log(weatherData);
-    			weatherCurrent.temp = weatherData.current.temp_c;
-    			weatherCurrent.humidity = weatherData.current.humidity;
-    			weatherCurrent.text = weatherData.current.condition.text;
-    			weatherCurrent.location = {};
-    			weatherCurrent.location.name = weatherData.location.name;
+    			currentWeather.setCurrentWeather(weatherData);
     		}
-
-    		currentWeather.setCurrentWeather(weatherCurrent);
     	}
 
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$1.warn(`<App> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$2.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$capture_state = () => ({
     		Card,
-    		Header,
+    		AutoComplete,
     		currentWeatherDataByGeographicCoordinates,
     		currentWeather,
     		currentPositionOptions,

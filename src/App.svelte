@@ -1,8 +1,9 @@
 <script>
   import Card from "./components/Card.svelte";
-  import Header from "./components/Header.svelte";
+  import AutoComplete from "./components/AutoComplete.svelte";
   import currentWeatherDataByGeographicCoordinates from "./service/currentWeatherDataByGeographicCoordinates";
   import { currentWeather } from "./store/currentWeatherStore";
+
 
   const currentPositionOptions = {
     enableHighAccuracy: false,
@@ -10,11 +11,11 @@
     timeout: 3000,
   };
   let weatherCurrent = {
-        id: 0,
-        temp: '-',
-        humidity: '',
-        windSpeed: ''
-    };
+    id: 0,
+    temp: "-",
+    humidity: "",
+    windSpeed: "",
+  };
 
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(
@@ -24,24 +25,18 @@
     );
   } else {
   }
-  
 
   async function successGeolocation(position) {
-    console.log("localizacon", position);
+
     let weatherData = await currentWeatherDataByGeographicCoordinates(
       position.coords.latitude,
-      position.coords.longitude
+      position.coords.longitude,
     );
-	if(weatherData != null){
-    console.log(weatherData);
+    if (weatherData != null) {
+      console.log(weatherData);
+      currentWeather.setCurrentWeather(weatherData);
+    }
 
-		weatherCurrent.temp = weatherData.current.temp_c;
-    weatherCurrent.humidity = weatherData.current.humidity;
-    weatherCurrent.text = weatherData.current.condition.text;
-    weatherCurrent.location = {};
-    weatherCurrent.location.name = weatherData.location.name
-	}
-    currentWeather.setCurrentWeather(weatherCurrent);
   }
 
   async function errorGeolocation() {}
@@ -49,10 +44,9 @@
 
 <main>
   <div class="container">
-  
-    <Header />
+    <AutoComplete />
     {#if $currentWeather !== null}
-    <Card />
+      <Card />
     {/if}
   </div>
 </main>
