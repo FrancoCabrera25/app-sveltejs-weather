@@ -2,8 +2,7 @@
   import  currentWeather  from "../store/currentWeatherStore";
 
 
-  let bgColor = null;
-
+  let bgColor = null;;
   $: if ($currentWeather.current.temp_c !== "") {
     console.log('current city', $currentWeather);
     $currentWeather.current.temp_c > 35 ? (bgColor = "flare") : null;
