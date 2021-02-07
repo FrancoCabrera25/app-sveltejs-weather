@@ -1,5 +1,7 @@
 <script>
+  import { MONTH } from "./../constants/monthName.js";
   import currentWeather from "../store/currentWeatherStore";
+  import { DAYS } from "../constants/dayName";
 
   export let temp;
   export let conditionText;
@@ -8,7 +10,11 @@
   export let wind;
   export let uv;
   export let conditionTextIcon;
-  console.log('icon text', conditionTextIcon);
+  export let dayName;
+  export let dayNumber;
+  export let month;
+  export let hours;
+  export let minutes;
 </script>
 
 <main>
@@ -17,6 +23,7 @@
       class="card text-white shadow p-3 mb-5  rounded  mb-3 col-md-6  col-sm-8  offset-md-3 card-container background-card"
     >
       <h1 class="title">{locationName}</h1>
+      <h4 class="title">{dayName} {dayNumber} de {month} {hours}:{minutes}</h4>
       <div class="container">
         <div class="item">
           <div>
@@ -25,7 +32,12 @@
           </div>
         </div>
         <div class="item">
-          <img class="icons" src="./icons/{conditionTextIcon}.svg" />
+          <!-- svelte-ignore a11y-missing-attribute -->
+          <img
+            class="icons"
+            src="./icons/{conditionTextIcon}.svg"
+            atl={conditionTextIcon}
+          />
         </div>
       </div>
       <div class="info">
