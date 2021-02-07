@@ -50,9 +50,6 @@
 </main>
 
 <style>
-  .card-title {
-    text-align: center;
-  }
   .background-card {
     background-image: url("../icons/imageback.png");
     border-radius: 10px;
