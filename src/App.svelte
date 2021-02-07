@@ -1,9 +1,9 @@
 <script>
-  import Card from "./components/Card.svelte";
   import AutoComplete from "./components/AutoComplete.svelte";
-  import currentWeatherDataByGeographicCoordinates from "./service/currentWeatherDataByGeographicCoordinates";
-  import { currentWeather } from "./store/currentWeatherStore";
-
+  import CurrentWeatherDay from "./components/CurrentWeatherDay.svelte";
+  import currentWeather, {
+    setCurrentWeather,
+  } from "./store/currentWeatherStore";
 
   const currentPositionOptions = {
     enableHighAccuracy: false,
@@ -27,16 +27,7 @@
   }
 
   async function successGeolocation(position) {
-
-    let weatherData = await currentWeatherDataByGeographicCoordinates(
-      position.coords.latitude,
-      position.coords.longitude,
-    );
-    if (weatherData != null) {
-      console.log(weatherData);
-      currentWeather.setCurrentWeather(weatherData);
-    }
-
+    setCurrentWeather(position.coords.latitude, position.coords.longitude);
   }
 
   async function errorGeolocation() {}
@@ -46,7 +37,7 @@
   <div class="container">
     <AutoComplete />
     {#if $currentWeather !== null}
-      <Card />
+      <CurrentWeatherDay />
     {/if}
   </div>
 </main>

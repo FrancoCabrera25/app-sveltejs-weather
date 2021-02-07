@@ -1,13 +1,14 @@
 import { writable } from "svelte/store";
+import currentWeatherDataByGeographicCoordinates from "../service/currentWeatherDataByGeographicCoordinates";
 
-function CurrentWeatherStore(){
-    const {subscribe, update ,set } = writable(null);
+const currentWeather = writable(null);
 
-    return{
-        subscribe,
-        setCurrentWeather:(arg) => set(arg),
-    }
-
+export async function setCurrentWeather(lat, long) {
+  let result = await currentWeatherDataByGeographicCoordinates(lat, long);
+  if (result) {
+    currentWeather.set(result);
+  }
+  return currentWeather;
 }
 
-export const currentWeather = CurrentWeatherStore();
+export default currentWeather;

@@ -1,29 +1,27 @@
 <script>
   import currentWeatherSearchAutocomplete from "../service/currentWeatherSearchAutocomplete";
   import citys, { setCitys } from "../store/citysStore";
-  import currentWeatherDataByGeographicCoordinates from "../service/currentWeatherDataByGeographicCoordinates";
-  import { currentWeather } from "../store/currentWeatherStore";
+  import currentWeather, {
+    setCurrentWeather,
+  } from "../store/currentWeatherStore";
 
   let ciudad = "";
   let selectedItem;
 
   const search = async () => {
-    const result = await currentWeatherSearchAutocomplete(ciudad);
-    //  citys.setCitys();
-    if (result !== undefined && result.length !== 0) {
-      setCitys(result);
-      // console.log("result", $citys);
+    if (ciudad.length >= 3) {
+      const result = await currentWeatherSearchAutocomplete(ciudad);
+      if (result !== undefined && result.length !== 0) {
+        setCitys(result);
+      }
     }
   };
   const handleInput = async (event) => {
-		selectedItem = $citys.find((item) => event.target.value === item.name);
-      console.log(selectedItem);
-      if(selectedItem !== undefined)  {
-       const weatherData   = await currentWeatherDataByGeographicCoordinates(selectedItem.lat,selectedItem.lon);
-       currentWeather.setCurrentWeather(weatherData);
-       console.log('selected', weatherData);
-      } 
-	}
+    selectedItem = $citys.find((item) => event.target.value === item.name);
+    if (selectedItem !== undefined) {
+      setCurrentWeather(selectedItem.lat, selectedItem.lon);
+    }
+  };
 </script>
 
 <main class="mt-2">
@@ -34,7 +32,7 @@
     placeholder="Ingrese una ciudad"
     bind:value={ciudad}
     on:keypress={search}
-    on:input="{handleInput}"
+    on:input={handleInput}
   />
   <datalist id="datalistOptions">
     {#each $citys as item}

@@ -1,11 +1,11 @@
 <script>
-  import { currentWeather } from "../store/currentWeatherStore";
+  import  currentWeather  from "../store/currentWeatherStore";
 
 
   let bgColor = null;
-  $: console.log("store", $currentWeather);
 
   $: if ($currentWeather.current.temp_c !== "") {
+    console.log('current city', $currentWeather);
     $currentWeather.current.temp_c > 35 ? (bgColor = "flare") : null;
     $currentWeather.current.temp_c > 25 && $currentWeather.current.temp_c < 36
       ? (bgColor = "background-card-blue")
