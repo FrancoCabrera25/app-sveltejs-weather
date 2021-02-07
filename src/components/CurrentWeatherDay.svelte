@@ -11,7 +11,7 @@
   let hours = ''
   let minutes = '';
   let conditionTextIcon = "";
-
+  let locationName = '';
 
   $: if ($currentWeather !== null) {
     conditionTextIcon = getIconsCard(
@@ -27,7 +27,7 @@
     hours = new Date($currentWeather.location.localtime).getHours();
     minutes = new Date($currentWeather.location.localtime).getMinutes();
 
-    console.log("hours", hours);
+    locationName = $currentWeather.location.name === "Liniers" ? "Rosario" :  $currentWeather.location.name;
   }
 </script>
 
@@ -36,7 +36,7 @@
     <Card
       temp={$currentWeather.current.temp_c}
       conditionText={$currentWeather.current.condition.text}
-      locationName={$currentWeather.location.name}
+      {locationName}
       humidity={$currentWeather.current.humidity}
       wind={$currentWeather.current.wind_kph}
       uv={$currentWeather.current.uv}
