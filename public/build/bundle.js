@@ -2214,23 +2214,20 @@ var app = (function () {
     const { console: console_1 } = globals;
     const file$1 = "src/components/Card.svelte";
 
-    // (21:2) {#if $currentWeather !== ""}
+    // (15:2) {#if $currentWeather !== ""}
     function create_if_block(ctx) {
     	let div5;
     	let h1;
-    	let t0_value = /*$currentWeather*/ ctx[0].location.name + "";
     	let t0;
     	let t1;
     	let div3;
     	let div1;
     	let div0;
     	let h2;
-    	let t2_value = /*$currentWeather*/ ctx[0].current.temp_c + "";
     	let t2;
     	let t3;
     	let t4;
     	let h4;
-    	let t5_value = /*$currentWeather*/ ctx[0].current.condition.text + "";
     	let t5;
     	let t6;
     	let div2;
@@ -2240,37 +2237,33 @@ var app = (function () {
     	let div4;
     	let span0;
     	let t8;
-    	let t9_value = /*$currentWeather*/ ctx[0].current.humidity + "";
     	let t9;
     	let t10;
     	let t11;
     	let span1;
     	let t12;
-    	let t13_value = /*$currentWeather*/ ctx[0].current.wind_kph + "";
     	let t13;
     	let t14;
     	let t15;
     	let span2;
     	let t16;
-    	let t17_value = /*$currentWeather*/ ctx[0].current.uv + "";
     	let t17;
-    	let div5_class_value;
 
     	const block = {
     		c: function create() {
     			div5 = element("div");
     			h1 = element("h1");
-    			t0 = text(t0_value);
+    			t0 = text(/*locationName*/ ctx[2]);
     			t1 = space();
     			div3 = element("div");
     			div1 = element("div");
     			div0 = element("div");
     			h2 = element("h2");
-    			t2 = text(t2_value);
+    			t2 = text(/*temp*/ ctx[0]);
     			t3 = text(" °");
     			t4 = space();
     			h4 = element("h4");
-    			t5 = text(t5_value);
+    			t5 = text(/*conditionText*/ ctx[1]);
     			t6 = space();
     			div2 = element("div");
     			img = element("img");
@@ -2278,40 +2271,40 @@ var app = (function () {
     			div4 = element("div");
     			span0 = element("span");
     			t8 = text("Humedad ");
-    			t9 = text(t9_value);
+    			t9 = text(/*humidity*/ ctx[3]);
     			t10 = text(" %");
     			t11 = space();
     			span1 = element("span");
-    			t12 = text("Viento  ");
-    			t13 = text(t13_value);
+    			t12 = text("Viento ");
+    			t13 = text(/*wind*/ ctx[4]);
     			t14 = text(" km/h");
     			t15 = space();
     			span2 = element("span");
     			t16 = text("Indice UV ");
-    			t17 = text(t17_value);
-    			attr_dev(h1, "class", "title svelte-arzzqz");
-    			add_location(h1, file$1, 23, 4, 799);
-    			attr_dev(h2, "class", "title-temp svelte-arzzqz");
-    			add_location(h2, file$1, 27, 10, 932);
-    			attr_dev(h4, "class", "title-day svelte-arzzqz");
-    			add_location(h4, file$1, 28, 10, 1005);
-    			add_location(div0, file$1, 26, 8, 916);
-    			attr_dev(div1, "class", "item svelte-arzzqz");
-    			add_location(div1, file$1, 25, 6, 889);
-    			attr_dev(img, "class", "icons svelte-arzzqz");
-    			if (img.src !== (img_src_value = "./icons/day.svg")) attr_dev(img, "src", img_src_value);
-    			add_location(img, file$1, 33, 8, 1141);
-    			attr_dev(div2, "class", "item svelte-arzzqz");
-    			add_location(div2, file$1, 32, 6, 1114);
-    			attr_dev(div3, "class", "container svelte-arzzqz");
-    			add_location(div3, file$1, 24, 4, 859);
-    			add_location(span0, file$1, 37, 9, 1243);
-    			add_location(span1, file$1, 38, 9, 1311);
-    			add_location(span2, file$1, 39, 9, 1382);
-    			attr_dev(div4, "class", "info svelte-arzzqz");
-    			add_location(div4, file$1, 36, 6, 1215);
-    			attr_dev(div5, "class", div5_class_value = "card text-white shadow p-3 mb-5  rounded " + /*bgColor*/ ctx[1] + " mb-3 col-md-6  col-sm-8  offset-md-3 card-container" + " svelte-arzzqz");
-    			add_location(div5, file$1, 21, 4, 673);
+    			t17 = text(/*uv*/ ctx[5]);
+    			attr_dev(h1, "class", "title svelte-179zxrc");
+    			add_location(h1, file$1, 18, 6, 477);
+    			attr_dev(h2, "class", "title-temp svelte-179zxrc");
+    			add_location(h2, file$1, 22, 12, 600);
+    			attr_dev(h4, "class", "title-day svelte-179zxrc");
+    			add_location(h4, file$1, 23, 12, 649);
+    			add_location(div0, file$1, 21, 10, 582);
+    			attr_dev(div1, "class", "item svelte-179zxrc");
+    			add_location(div1, file$1, 20, 8, 553);
+    			attr_dev(img, "class", "icons svelte-179zxrc");
+    			if (img.src !== (img_src_value = "./icons/" + /*conditionTextIcon*/ ctx[6] + ".svg")) attr_dev(img, "src", img_src_value);
+    			add_location(img, file$1, 27, 10, 761);
+    			attr_dev(div2, "class", "item svelte-179zxrc");
+    			add_location(div2, file$1, 26, 8, 732);
+    			attr_dev(div3, "class", "container svelte-179zxrc");
+    			add_location(div3, file$1, 19, 6, 521);
+    			add_location(span0, file$1, 31, 8, 882);
+    			add_location(span1, file$1, 32, 8, 924);
+    			add_location(span2, file$1, 33, 8, 964);
+    			attr_dev(div4, "class", "info svelte-179zxrc");
+    			add_location(div4, file$1, 30, 6, 855);
+    			attr_dev(div5, "class", "card text-white shadow p-3 mb-5  rounded  mb-3 col-md-6  col-sm-8  offset-md-3 card-container background-card svelte-179zxrc");
+    			add_location(div5, file$1, 15, 4, 336);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div5, anchor);
@@ -2347,16 +2340,17 @@ var app = (function () {
     			append_dev(span2, t17);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*$currentWeather*/ 1 && t0_value !== (t0_value = /*$currentWeather*/ ctx[0].location.name + "")) set_data_dev(t0, t0_value);
-    			if (dirty & /*$currentWeather*/ 1 && t2_value !== (t2_value = /*$currentWeather*/ ctx[0].current.temp_c + "")) set_data_dev(t2, t2_value);
-    			if (dirty & /*$currentWeather*/ 1 && t5_value !== (t5_value = /*$currentWeather*/ ctx[0].current.condition.text + "")) set_data_dev(t5, t5_value);
-    			if (dirty & /*$currentWeather*/ 1 && t9_value !== (t9_value = /*$currentWeather*/ ctx[0].current.humidity + "")) set_data_dev(t9, t9_value);
-    			if (dirty & /*$currentWeather*/ 1 && t13_value !== (t13_value = /*$currentWeather*/ ctx[0].current.wind_kph + "")) set_data_dev(t13, t13_value);
-    			if (dirty & /*$currentWeather*/ 1 && t17_value !== (t17_value = /*$currentWeather*/ ctx[0].current.uv + "")) set_data_dev(t17, t17_value);
+    			if (dirty & /*locationName*/ 4) set_data_dev(t0, /*locationName*/ ctx[2]);
+    			if (dirty & /*temp*/ 1) set_data_dev(t2, /*temp*/ ctx[0]);
+    			if (dirty & /*conditionText*/ 2) set_data_dev(t5, /*conditionText*/ ctx[1]);
 
-    			if (dirty & /*bgColor*/ 2 && div5_class_value !== (div5_class_value = "card text-white shadow p-3 mb-5  rounded " + /*bgColor*/ ctx[1] + " mb-3 col-md-6  col-sm-8  offset-md-3 card-container" + " svelte-arzzqz")) {
-    				attr_dev(div5, "class", div5_class_value);
+    			if (dirty & /*conditionTextIcon*/ 64 && img.src !== (img_src_value = "./icons/" + /*conditionTextIcon*/ ctx[6] + ".svg")) {
+    				attr_dev(img, "src", img_src_value);
     			}
+
+    			if (dirty & /*humidity*/ 8) set_data_dev(t9, /*humidity*/ ctx[3]);
+    			if (dirty & /*wind*/ 16) set_data_dev(t13, /*wind*/ ctx[4]);
+    			if (dirty & /*uv*/ 32) set_data_dev(t17, /*uv*/ ctx[5]);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div5);
@@ -2367,7 +2361,7 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(21:2) {#if $currentWeather !== \\\"\\\"}",
+    		source: "(15:2) {#if $currentWeather !== \\\"\\\"}",
     		ctx
     	});
 
@@ -2376,13 +2370,13 @@ var app = (function () {
 
     function create_fragment$1(ctx) {
     	let main;
-    	let if_block = /*$currentWeather*/ ctx[0] !== "" && create_if_block(ctx);
+    	let if_block = /*$currentWeather*/ ctx[7] !== "" && create_if_block(ctx);
 
     	const block = {
     		c: function create() {
     			main = element("main");
     			if (if_block) if_block.c();
-    			add_location(main, file$1, 19, 0, 631);
+    			add_location(main, file$1, 13, 0, 294);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2392,7 +2386,7 @@ var app = (function () {
     			if (if_block) if_block.m(main, null);
     		},
     		p: function update(ctx, [dirty]) {
-    			if (/*$currentWeather*/ ctx[0] !== "") {
+    			if (/*$currentWeather*/ ctx[7] !== "") {
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
@@ -2427,57 +2421,93 @@ var app = (function () {
     function instance$1($$self, $$props, $$invalidate) {
     	let $currentWeather;
     	validate_store(currentWeather, "currentWeather");
-    	component_subscribe($$self, currentWeather, $$value => $$invalidate(0, $currentWeather = $$value));
+    	component_subscribe($$self, currentWeather, $$value => $$invalidate(7, $currentWeather = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Card", slots, []);
-    	let bgColor = null;
-    	const writable_props = [];
+    	let { temp } = $$props;
+    	let { conditionText } = $$props;
+    	let { locationName } = $$props;
+    	let { humidity } = $$props;
+    	let { wind } = $$props;
+    	let { uv } = $$props;
+    	let { conditionTextIcon } = $$props;
+    	console.log("icon text", conditionTextIcon);
+
+    	const writable_props = [
+    		"temp",
+    		"conditionText",
+    		"locationName",
+    		"humidity",
+    		"wind",
+    		"uv",
+    		"conditionTextIcon"
+    	];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1.warn(`<Card> was created with unknown prop '${key}'`);
     	});
 
-    	$$self.$capture_state = () => ({ currentWeather, bgColor, $currentWeather });
+    	$$self.$$set = $$props => {
+    		if ("temp" in $$props) $$invalidate(0, temp = $$props.temp);
+    		if ("conditionText" in $$props) $$invalidate(1, conditionText = $$props.conditionText);
+    		if ("locationName" in $$props) $$invalidate(2, locationName = $$props.locationName);
+    		if ("humidity" in $$props) $$invalidate(3, humidity = $$props.humidity);
+    		if ("wind" in $$props) $$invalidate(4, wind = $$props.wind);
+    		if ("uv" in $$props) $$invalidate(5, uv = $$props.uv);
+    		if ("conditionTextIcon" in $$props) $$invalidate(6, conditionTextIcon = $$props.conditionTextIcon);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		currentWeather,
+    		temp,
+    		conditionText,
+    		locationName,
+    		humidity,
+    		wind,
+    		uv,
+    		conditionTextIcon,
+    		$currentWeather
+    	});
 
     	$$self.$inject_state = $$props => {
-    		if ("bgColor" in $$props) $$invalidate(1, bgColor = $$props.bgColor);
+    		if ("temp" in $$props) $$invalidate(0, temp = $$props.temp);
+    		if ("conditionText" in $$props) $$invalidate(1, conditionText = $$props.conditionText);
+    		if ("locationName" in $$props) $$invalidate(2, locationName = $$props.locationName);
+    		if ("humidity" in $$props) $$invalidate(3, humidity = $$props.humidity);
+    		if ("wind" in $$props) $$invalidate(4, wind = $$props.wind);
+    		if ("uv" in $$props) $$invalidate(5, uv = $$props.uv);
+    		if ("conditionTextIcon" in $$props) $$invalidate(6, conditionTextIcon = $$props.conditionTextIcon);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*$currentWeather*/ 1) {
-    			 if ($currentWeather.current.temp_c !== "") {
-    				console.log("current city", $currentWeather);
-
-    				$currentWeather.current.temp_c > 35
-    				? $$invalidate(1, bgColor = "flare")
-    				: null;
-
-    				$currentWeather.current.temp_c > 25 && $currentWeather.current.temp_c < 36
-    				? $$invalidate(1, bgColor = "background-card-blue")
-    				: null;
-
-    				$currentWeather.current.temp_c > 10 && $currentWeather.current.temp_c < 26
-    				? $$invalidate(1, bgColor = "background-card-blue")
-    				: null;
-
-    				$currentWeather.current.temp_c < 11
-    				? $$invalidate(1, bgColor = "cool-sky")
-    				: null;
-    			}
-    		}
-    	};
-
-    	return [$currentWeather, bgColor];
+    	return [
+    		temp,
+    		conditionText,
+    		locationName,
+    		humidity,
+    		wind,
+    		uv,
+    		conditionTextIcon,
+    		$currentWeather
+    	];
     }
 
     class Card extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, {});
+
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, {
+    			temp: 0,
+    			conditionText: 1,
+    			locationName: 2,
+    			humidity: 3,
+    			wind: 4,
+    			uv: 5,
+    			conditionTextIcon: 6
+    		});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -2485,17 +2515,116 @@ var app = (function () {
     			options,
     			id: create_fragment$1.name
     		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*temp*/ ctx[0] === undefined && !("temp" in props)) {
+    			console_1.warn("<Card> was created without expected prop 'temp'");
+    		}
+
+    		if (/*conditionText*/ ctx[1] === undefined && !("conditionText" in props)) {
+    			console_1.warn("<Card> was created without expected prop 'conditionText'");
+    		}
+
+    		if (/*locationName*/ ctx[2] === undefined && !("locationName" in props)) {
+    			console_1.warn("<Card> was created without expected prop 'locationName'");
+    		}
+
+    		if (/*humidity*/ ctx[3] === undefined && !("humidity" in props)) {
+    			console_1.warn("<Card> was created without expected prop 'humidity'");
+    		}
+
+    		if (/*wind*/ ctx[4] === undefined && !("wind" in props)) {
+    			console_1.warn("<Card> was created without expected prop 'wind'");
+    		}
+
+    		if (/*uv*/ ctx[5] === undefined && !("uv" in props)) {
+    			console_1.warn("<Card> was created without expected prop 'uv'");
+    		}
+
+    		if (/*conditionTextIcon*/ ctx[6] === undefined && !("conditionTextIcon" in props)) {
+    			console_1.warn("<Card> was created without expected prop 'conditionTextIcon'");
+    		}
+    	}
+
+    	get temp() {
+    		throw new Error("<Card>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set temp(value) {
+    		throw new Error("<Card>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get conditionText() {
+    		throw new Error("<Card>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set conditionText(value) {
+    		throw new Error("<Card>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get locationName() {
+    		throw new Error("<Card>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set locationName(value) {
+    		throw new Error("<Card>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get humidity() {
+    		throw new Error("<Card>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set humidity(value) {
+    		throw new Error("<Card>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get wind() {
+    		throw new Error("<Card>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set wind(value) {
+    		throw new Error("<Card>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get uv() {
+    		throw new Error("<Card>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set uv(value) {
+    		throw new Error("<Card>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get conditionTextIcon() {
+    		throw new Error("<Card>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set conditionTextIcon(value) {
+    		throw new Error("<Card>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
     /* src/components/CurrentWeatherDay.svelte generated by Svelte v3.32.1 */
     const file$2 = "src/components/CurrentWeatherDay.svelte";
 
-    // (8:2) {#if $currentWeather !== null}
+    // (146:2) {#if $currentWeather !== null}
     function create_if_block$1(ctx) {
     	let card;
     	let current;
-    	card = new Card({ $$inline: true });
+
+    	card = new Card({
+    			props: {
+    				temp: /*$currentWeather*/ ctx[0].current.temp_c,
+    				conditionText: /*$currentWeather*/ ctx[0].current.condition.text,
+    				locationName: /*$currentWeather*/ ctx[0].location.name,
+    				humidity: /*$currentWeather*/ ctx[0].current.humidity,
+    				wind: /*$currentWeather*/ ctx[0].current.wind_kph,
+    				uv: /*$currentWeather*/ ctx[0].current.uv,
+    				conditionTextIcon: /*conditionTextIcon*/ ctx[1]
+    			},
+    			$$inline: true
+    		});
 
     	const block = {
     		c: function create() {
@@ -2504,6 +2633,17 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			mount_component(card, target, anchor);
     			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const card_changes = {};
+    			if (dirty & /*$currentWeather*/ 1) card_changes.temp = /*$currentWeather*/ ctx[0].current.temp_c;
+    			if (dirty & /*$currentWeather*/ 1) card_changes.conditionText = /*$currentWeather*/ ctx[0].current.condition.text;
+    			if (dirty & /*$currentWeather*/ 1) card_changes.locationName = /*$currentWeather*/ ctx[0].location.name;
+    			if (dirty & /*$currentWeather*/ 1) card_changes.humidity = /*$currentWeather*/ ctx[0].current.humidity;
+    			if (dirty & /*$currentWeather*/ 1) card_changes.wind = /*$currentWeather*/ ctx[0].current.wind_kph;
+    			if (dirty & /*$currentWeather*/ 1) card_changes.uv = /*$currentWeather*/ ctx[0].current.uv;
+    			if (dirty & /*conditionTextIcon*/ 2) card_changes.conditionTextIcon = /*conditionTextIcon*/ ctx[1];
+    			card.$set(card_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -2523,7 +2663,7 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(8:2) {#if $currentWeather !== null}",
+    		source: "(146:2) {#if $currentWeather !== null}",
     		ctx
     	});
 
@@ -2539,7 +2679,7 @@ var app = (function () {
     		c: function create() {
     			main = element("main");
     			if (if_block) if_block.c();
-    			add_location(main, file$2, 6, 0, 132);
+    			add_location(main, file$2, 144, 0, 5000);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2552,6 +2692,8 @@ var app = (function () {
     		p: function update(ctx, [dirty]) {
     			if (/*$currentWeather*/ ctx[0] !== null) {
     				if (if_block) {
+    					if_block.p(ctx, dirty);
+
     					if (dirty & /*$currentWeather*/ 1) {
     						transition_in(if_block, 1);
     					}
@@ -2597,20 +2739,187 @@ var app = (function () {
     	return block;
     }
 
+    const CONDITION_TEXT_SOLEADO = "Soleado";
+    const CONDITION_TEXT_DESPEJADO = "Despejado";
+    const CONDITION_TEXT_PARCIALMENTE_NUBLADO = "Parcialmente nublado";
+    const CONDITION_TEXT_NUBLADO = "Nublado";
+    const CONDITION_TEXT_CIELO_CUBIERTO = "Cielo cubierto";
+    const CONDITION_TEXT_CIELO_TORMENTOSO_EN_LAS_APROXIMACIONES = "Cielos tormentosos en las aproximaciones";
+    const CONDITION_TEXT_NEBLINA = "Neblina";
+    const CONDITION_TEXT_LLUVIA_MODERADA = "Lluvia  moderada a intervalos";
+    const CONDITION_TEXT_NIEVE_MODERADA = "Nieve moderada a intervalos en las aproximaciones";
+    const CONDITION_TEXT_AGUA_NIEVE = "Aguanieve moderada a intervalos en las aproximaciones";
+    const CONDITION_TEXT_CIELOS_TORMENTOSOS_APROXIMACIONES = "Cielos tormentosos en las aproximaciones";
+    const CONDITION_TEXT_CHUBASCO_NIEVE = "Chubascos de nieve";
+    const CONDITION_TEXT_LLOVISNA_INTERVALOS = "Llovizna a intervalos";
+    const CONDITION_TEXT_LLOVISNA = "Llovizna";
+    const CONDITION_TEXT_LLOVISNA_HELADA = "Llovizna helada";
+    const CONDITION_TEXT_LIGERAS_LLUVIAS = "Ligeras lluvias";
+    const CONDITION_TEXT_NIEVE_TORMENTA = "Nieve moderada o fuertes nevadas con tormenta en la región";
+    const CONDITION_TEXT_NIEVE_LIGERA = "Ligeras precipitaciones de aguanieve";
+
     function instance$2($$self, $$props, $$invalidate) {
     	let $currentWeather;
     	validate_store(currentWeather, "currentWeather");
     	component_subscribe($$self, currentWeather, $$value => $$invalidate(0, $currentWeather = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("CurrentWeatherDay", slots, []);
+    	let conditionTextIcon = "";
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<CurrentWeatherDay> was created with unknown prop '${key}'`);
     	});
 
-    	$$self.$capture_state = () => ({ Card, currentWeather, $currentWeather });
-    	return [$currentWeather];
+    	$$self.$capture_state = () => ({
+    		Card,
+    		currentWeather,
+    		CONDITION_TEXT_SOLEADO,
+    		CONDITION_TEXT_DESPEJADO,
+    		CONDITION_TEXT_PARCIALMENTE_NUBLADO,
+    		CONDITION_TEXT_NUBLADO,
+    		CONDITION_TEXT_CIELO_CUBIERTO,
+    		CONDITION_TEXT_CIELO_TORMENTOSO_EN_LAS_APROXIMACIONES,
+    		CONDITION_TEXT_NEBLINA,
+    		CONDITION_TEXT_LLUVIA_MODERADA,
+    		CONDITION_TEXT_NIEVE_MODERADA,
+    		CONDITION_TEXT_AGUA_NIEVE,
+    		CONDITION_TEXT_CIELOS_TORMENTOSOS_APROXIMACIONES,
+    		CONDITION_TEXT_CHUBASCO_NIEVE,
+    		CONDITION_TEXT_LLOVISNA_INTERVALOS,
+    		CONDITION_TEXT_LLOVISNA,
+    		CONDITION_TEXT_LLOVISNA_HELADA,
+    		CONDITION_TEXT_LIGERAS_LLUVIAS,
+    		CONDITION_TEXT_NIEVE_TORMENTA,
+    		CONDITION_TEXT_NIEVE_LIGERA,
+    		conditionTextIcon,
+    		$currentWeather
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("conditionTextIcon" in $$props) $$invalidate(1, conditionTextIcon = $$props.conditionTextIcon);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*$currentWeather*/ 1) {
+    			 if ($currentWeather.current.is_day === 1) {
+    				switch ($currentWeather.current.condition.text) {
+    					case CONDITION_TEXT_SOLEADO:
+    						$$invalidate(1, conditionTextIcon = "day");
+    						break;
+    					case CONDITION_TEXT_PARCIALMENTE_NUBLADO:
+    						$$invalidate(1, conditionTextIcon = "cloudy-day-1");
+    						break;
+    					case CONDITION_TEXT_NUBLADO:
+    						$$invalidate(1, conditionTextIcon = "snowy-4");
+    						break;
+    					case CONDITION_TEXT_CIELO_CUBIERTO:
+    						$$invalidate(1, conditionTextIcon = "cloudy");
+    						break;
+    					case CONDITION_TEXT_CIELO_TORMENTOSO_EN_LAS_APROXIMACIONES:
+    						$$invalidate(1, conditionTextIcon = "cloudy");
+    						break;
+    					case CONDITION_TEXT_NEBLINA:
+    						$$invalidate(1, conditionTextIcon = "cloudy");
+    						break;
+    					case CONDITION_TEXT_LLUVIA_MODERADA:
+    						$$invalidate(1, conditionTextIcon = "rainy-4");
+    						break;
+    					case CONDITION_TEXT_NIEVE_MODERADA:
+    						$$invalidate(1, conditionTextIcon = "snowy-6");
+    						break;
+    					case CONDITION_TEXT_AGUA_NIEVE:
+    						$$invalidate(1, conditionTextIcon = "snowy-6");
+    						break;
+    					case CONDITION_TEXT_CIELOS_TORMENTOSOS_APROXIMACIONES:
+    						$$invalidate(1, conditionTextIcon = "thunder");
+    						break;
+    					case CONDITION_TEXT_CHUBASCO_NIEVE:
+    						$$invalidate(1, conditionTextIcon = "snowy-6");
+    						break;
+    					case CONDITION_TEXT_LLOVISNA_INTERVALOS:
+    						$$invalidate(1, conditionTextIcon = "rainy-4");
+    						break;
+    					case CONDITION_TEXT_LLOVISNA:
+    						$$invalidate(1, conditionTextIcon = "rainy-4");
+    						break;
+    					case CONDITION_TEXT_LLOVISNA_HELADA:
+    						$$invalidate(1, conditionTextIcon = "rainy-4");
+    						break;
+    					case CONDITION_TEXT_LIGERAS_LLUVIAS:
+    						$$invalidate(1, conditionTextIcon = "rainy-6");
+    					case CONDITION_TEXT_NIEVE_TORMENTA:
+    						$$invalidate(1, conditionTextIcon = "thunder");
+    					case CONDITION_TEXT_NIEVE_LIGERA:
+    						$$invalidate(1, conditionTextIcon = "snowy-6");
+    						break;
+    					default:
+    						$$invalidate(1, conditionTextIcon = "cloudy");
+    						break;
+    				}
+    			} else {
+    				switch ($currentWeather.current.condition.text) {
+    					case CONDITION_TEXT_DESPEJADO:
+    						$$invalidate(1, conditionTextIcon = "night");
+    						break;
+    					case CONDITION_TEXT_PARCIALMENTE_NUBLADO:
+    						$$invalidate(1, conditionTextIcon = "cloudy-night-1");
+    						break;
+    					case CONDITION_TEXT_NUBLADO:
+    						$$invalidate(1, conditionTextIcon = "snowy-4");
+    						break;
+    					case CONDITION_TEXT_CIELO_CUBIERTO:
+    						$$invalidate(1, conditionTextIcon = "cloudy");
+    						break;
+    					case CONDITION_TEXT_CIELO_TORMENTOSO_EN_LAS_APROXIMACIONES:
+    						$$invalidate(1, conditionTextIcon = "cloudy");
+    						break;
+    					case CONDITION_TEXT_NEBLINA:
+    						$$invalidate(1, conditionTextIcon = "cloudy");
+    						break;
+    					case CONDITION_TEXT_LLUVIA_MODERADA:
+    						$$invalidate(1, conditionTextIcon = "rainy-4");
+    						break;
+    					case CONDITION_TEXT_NIEVE_MODERADA:
+    						$$invalidate(1, conditionTextIcon = "snowy-6");
+    					case CONDITION_TEXT_AGUA_NIEVE:
+    						$$invalidate(1, conditionTextIcon = "snowy-6");
+    						break;
+    					case CONDITION_TEXT_CIELOS_TORMENTOSOS_APROXIMACIONES:
+    						$$invalidate(1, conditionTextIcon = "thunder");
+    						break;
+    					case CONDITION_TEXT_CHUBASCO_NIEVE:
+    						$$invalidate(1, conditionTextIcon = "snowy-6");
+    						break;
+    					case CONDITION_TEXT_LLOVISNA_INTERVALOS:
+    						$$invalidate(1, conditionTextIcon = "rainy-4");
+    						break;
+    					case CONDITION_TEXT_LLOVISNA:
+    						$$invalidate(1, conditionTextIcon = "rainy-4");
+    						break;
+    					case CONDITION_TEXT_LLOVISNA_HELADA:
+    						$$invalidate(1, conditionTextIcon = "rainy-4");
+    						break;
+    					case CONDITION_TEXT_LIGERAS_LLUVIAS:
+    						$$invalidate(1, conditionTextIcon = "rainy-6");
+    					case CONDITION_TEXT_NIEVE_TORMENTA:
+    						$$invalidate(1, conditionTextIcon = "thunder");
+    					case CONDITION_TEXT_NIEVE_LIGERA:
+    						$$invalidate(1, conditionTextIcon = "snowy-6");
+    						break;
+    					default:
+    						$$invalidate(1, conditionTextIcon = "cloudy");
+    						break;
+    				}
+    			}
+    		}
+    	};
+
+    	return [$currentWeather, conditionTextIcon];
     }
 
     class CurrentWeatherDay extends SvelteComponentDev {
